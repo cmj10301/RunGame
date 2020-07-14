@@ -6,7 +6,6 @@ using UnityEngine.UI;
 // 씬에는 단 하나의 게임 매니저만 존재할 수 있다.
 public class GameManager : MonoBehaviour {
     public static GameManager instance; // 싱글톤을 할당할 전역 변수
-
     public bool isGameover = false; // 게임 오버 상태
     public Text scoreText; // 점수를 출력할 UI 텍스트
     public GameObject gameoverUI; // 게임 오버시 활성화 할 UI 게임 오브젝트
@@ -34,15 +33,29 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         // 게임 오버 상태에서 게임을 재시작할 수 있게 하는 처리
+        if (isGameover && Input.GetMouseButtonDown(0))
+        {
+            // 게임 오버 상태에서 왼쪽 버튼을 클릭하면 현재 씬 시작
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     // 점수를 증가시키는 메서드
     public void AddScore(int newScore) {
-        
+        // 게임 오버가 아니라면
+        if (!isGameover)
+        {
+            //점수를 증가
+            score += newScore;
+            scoreText.text = "Score :" + score;
+        }
     }
 
     // 플레이어 캐릭터가 사망시 게임 오버를 실행하는 메서드
     public void OnPlayerDead() {
-        
+        // 현재 상태를 게임 오버 상태로 변경
+        isGameover = true;
+        // 게임 오버 UI를 활성화
+        gameoverUI.SetActive(true);
     }
 }
